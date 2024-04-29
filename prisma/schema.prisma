@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js" // Define el generador de cliente de Prisma, usando el cliente de JavaScript.
+}
+
+datasource db {
+  provider = "mysql" // Establece MySQL como el proveedor de base de datos.
+  url      = env("DATABASE_URL") // Utiliza una variable de entorno para la URL de conexión a la base de datos.
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+
+model User {
+  id Int @id @default(autoincrement()) // Campo de identificación autoincremental, clave primaria.
+  email String @unique // Campo de correo electrónico, debe ser único.
+  name String // Campo de nombre del usuario.
+  role Role @default(USER)
+  password String // Campo de contraseña del usuario.
+  created_at DateTime @default(now()) // Fecha de creación, se establece automáticamente al momento actual al crear.
+  updated_at DateTime @updatedAt // Fecha de última actualización, se actualiza automáticamente al modificar.
+  createdTasks Task[] @relation("TaskCreator") // Tareas que el usuario ha creado
+  assignedTasks Task[] @relation("TaskAssignee") // Tareas que están asignadas a este usuario
+}
+
+model Task {
+  id Int @id @default(autoincrement()) // Campo de identificación autoincremental, clave primaria.
+  name String @unique // Campo de nombre de la tarea, debe ser único.
+  description String // Campo de descripción de la tarea.
+  estado Boolean @default(false) // campo de estado
+  date_complete DateTime?
+  createdBy User @relation(name: "TaskCreator",fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId Int
+  assignedTo User @relation(name: "TaskAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
+  assigneeId Int
+  created_at DateTime @default(now()) // Fecha de creación, se establece automáticamente al momento actual al crear.
+  updated_at DateTime @updatedAt // Fecha de última actualización, se actualiza automáticamente al modificar.
+}

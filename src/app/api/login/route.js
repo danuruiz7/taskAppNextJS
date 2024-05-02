@@ -2,6 +2,7 @@ import prisma from "../../../lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { serialize as serializeCookie } from "cookie";
 
 export async function POST(req) {
   try {
@@ -26,9 +27,12 @@ export async function POST(req) {
 
     if (!user) {
       // Si no se encuentra el usuario, devuelve un error
-      return new NextResponse(JSON.stringify({ message: "Email not found" }), {
-        status: 404,
-      });
+      return new NextResponse(
+        JSON.stringify({ message: "Email y Contraseñan incorrecta" }),
+        {
+          status: 404,
+        }
+      );
     }
 
     // Comparar la contraseña enviada con la contraseña hash almacenada
@@ -36,7 +40,7 @@ export async function POST(req) {
     if (!isMatch) {
       // Si la contraseña no coincide, devuelve un error
       return new NextResponse(
-        JSON.stringify({ message: "contraseñan incorrecta" }),
+        JSON.stringify({ message: "Email y Contraseñan incorrecta" }),
         {
           status: 401,
         }
@@ -54,12 +58,25 @@ export async function POST(req) {
       expiresIn: "1h",
     });
 
-    // Si las credenciales son correctas, devuelve un mensaje de éxito
-    // Aquí podrías generar un token de sesión o algo similar si es necesario
-    return new NextResponse(
-      JSON.stringify({ message: "Login successful", token: token }),
-      { status: 200 }
+    // Crear la cookie
+    const cookie = serializeCookie("token", token, {
+      path: "/",
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development", // Solo se envía en HTTPS
+      maxAge: 3600, // 1 hora de validez
+    });
+
+    const response = new NextResponse(
+      JSON.stringify({ message: "Login successful" }),
+      {
+        status: 200,
+        headers: {
+          "Set-Cookie": cookie,
+        },
+      }
     );
+
+    return response;
   } catch (error) {
     // Captura cualquier otro error
     return new NextResponse(

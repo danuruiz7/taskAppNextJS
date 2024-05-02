@@ -2,7 +2,6 @@ import prisma from "../../../lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { serialize as serializeCookie } from "cookie";
 
 export async function POST(req) {
   try {
@@ -52,31 +51,17 @@ export async function POST(req) {
       id: user.id,
       email: user.email,
       name: user.name,
+      role: user.role,
     };
 
     const token = jwt.sign(payload, process.env.TOKEN, {
       expiresIn: "1h",
     });
 
-    // Crear la cookie
-    const cookie = serializeCookie("token", token, {
-      path: "/",
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== "development", // Solo se envía en HTTPS
-      maxAge: 3600, // 1 hora de validez
-    });
-
-    const response = new NextResponse(
-      JSON.stringify({ message: "Login successful" }),
-      {
-        status: 200,
-        headers: {
-          "Set-Cookie": cookie,
-        },
-      }
+    return new NextResponse(
+      JSON.stringify({ message: "Login successful", token: token }),
+      { status: 200 }
     );
-
-    return response;
   } catch (error) {
     // Captura cualquier otro error
     return new NextResponse(

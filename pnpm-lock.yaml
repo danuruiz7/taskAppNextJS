@@ -17,9 +17,6 @@ importers:
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
-      cookie:
-        specifier: ^0.6.0
-        version: 0.6.0
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -432,10 +429,6 @@ packages:
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
-
-  cookie@0.6.0:
-    resolution: {integrity: sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==}
-    engines: {node: '>= 0.6'}
 
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
@@ -2014,8 +2007,6 @@ snapshots:
   commander@4.1.1: {}
 
   concat-map@0.0.1: {}
-
-  cookie@0.6.0: {}
 
   cross-spawn@7.0.3:
     dependencies:

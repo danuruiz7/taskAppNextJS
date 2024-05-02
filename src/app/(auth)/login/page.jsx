@@ -4,6 +4,7 @@ import axios from "axios";
 import { Lock, Mail } from "@/icons/Icons";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const {
@@ -16,6 +17,7 @@ export default function LoginPage() {
   const [serverError, setServerError] = useState("");
   const [timer, setTimer] = useState(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     return () => {
@@ -32,12 +34,24 @@ export default function LoginPage() {
         data
       );
       console.log(response.data);
+      localStorage.setItem("token", response.data.token);
+      router.push("/");
+
       setServerError("");
       clearTimeout(timer); // Limpia el timer si el login es exitoso o se intenta de nuevo
     } catch (error) {
-      setServerError(
-        error.response.data.message || "Un error ocurrió durante el login"
-      );
+      if (error.response) {
+        // Error producido por una respuesta del servidor, como un 4xx o 5xx
+        setServerError(
+          error.response.data.message || "Un error ocurrió durante el login"
+        );
+      } else if (error.request) {
+        // La petición fue hecha pero no se recibió respuesta
+        setServerError("No se pudo recibir respuesta del servidor");
+      } else {
+        // Algo causó un error en la petición que fue lanzada
+        setServerError("Error al hacer la petición");
+      }
       if (timer) clearTimeout(timer); // Limpia cualquier timer existente antes de establecer uno nuevo
       setTimer(
         setTimeout(() => {
@@ -50,7 +64,7 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="max-w-[85%] mx-auto bg-gray-500 mt-10 p-4 rounded-3xl shadow-inner shadow-gray-300">
+    <div className="max-w-[85%] md:max-w-[50%] lg:max-w-[25%] mx-auto bg-gray-500 mt-10 lg:mt-32 p-4 rounded-3xl shadow-inner shadow-gray-300">
       <h1 className="text-4xl mb-4 font-bold text-white text-center">Login</h1>
 
       <form onSubmit={onSubmit} className="" method="POST">
@@ -117,15 +131,15 @@ export default function LoginPage() {
           </div>
         )}
 
-        <p class="text-gray-100 dark:text-gray-100 mt-4 mb-2 text-sm">
+        <p className="text-gray-100 dark:text-gray-100 mt-4 mb-2 text-sm">
           No tienes cuentas?{" "}
           <Link
             href="signin"
-            class="inline-flex items-center font-bold text-blue-300 hover:underline"
+            className="inline-flex items-center font-bold text-blue-300 hover:underline"
           >
             Registrate
             <svg
-              class="w-4 h-4 ms-2 rtl:rotate-180"
+              className="w-4 h-4 ms-2 rtl:rotate-180"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -133,9 +147,9 @@ export default function LoginPage() {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M1 5h12m0 0L9 1m4 4L9 9"
               />
             </svg>

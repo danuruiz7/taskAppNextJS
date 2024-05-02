@@ -7,7 +7,6 @@ import { useState } from "react";
 
 export default function SigninPage() {
   const [loading, setLoading] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false);
   const router = useRouter();
 
   const {
@@ -36,7 +35,7 @@ export default function SigninPage() {
   });
 
   return (
-    <div className="max-w-[85%] mx-auto bg-gray-500 mt-10 p-4 rounded-3xl shadow-inner shadow-gray-300">
+    <div className="max-w-[85%] lg:max-w-[25%] mx-auto bg-gray-500 mt-10 lg:mt-16 p-4 rounded-3xl shadow-inner shadow-gray-300">
       <h1 className="text-4xl mb-4 font-bold text-white text-center">
         Registrate
       </h1>

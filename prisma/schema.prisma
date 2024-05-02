@@ -7,6 +7,7 @@ datasource db {
   url      = env("DATABASE_URL") // Utiliza una variable de entorno para la URL de conexión a la base de datos.
 }
 
+
 enum Role {
   USER
   ADMIN

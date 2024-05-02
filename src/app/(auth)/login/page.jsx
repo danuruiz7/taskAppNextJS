@@ -30,7 +30,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/login",
+        `${process.env.NEXT_PUBLIC_API_URL}/login`,
         data
       );
       console.log(response.data);

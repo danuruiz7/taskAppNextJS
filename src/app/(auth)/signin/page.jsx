@@ -21,7 +21,7 @@ export default function SigninPage() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/signin`,
+        `${process.env.NEXT_PUBLIC_API_URL}/signin`,
         data
       );
       console.log(response.data);
